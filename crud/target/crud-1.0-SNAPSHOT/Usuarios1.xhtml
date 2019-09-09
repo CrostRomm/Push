@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>#{msg['p1.tituloPestana']}</title>
+            </f:facet>
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+        </h:head>
+        <style type="text/css">
+            .old {
+                background-color: #1289A7 !important;
+                color: #000000 !important;
+            }
+            .ui-datatable.myTable th {
+            background: #70a1ff;
+        }
+        .fondo{
+            background-color: #535c68;
+        }
+
+        </style>
+        <h:body styleClass="fondo" onload="javascript: limpia();">
+            <p:layout fullPage="true" style="background-color: #535c68;">
+                <div class="row" style="background-color: #535c68;">
+                    <p:layoutUnit position="center">
+                        <p:outputPanel deferred="true" id="panel">
+                            <h:form id="form">
+                            <br/>
+                            <div align="center">
+                                <p:inputText id="ipt_names" requiredMessage="{msg['p1.requerido']}" value="#{personaUno.name}" placeholder="#{msg['p1.phNombre']}" required="true">
+                                    <f:validator validatorId="validacionNombre"/>
+                                    <f:validateLength minimum="2" maximum="20"/>
+                                    &nbsp;&nbsp;&nbsp;
+                                </p:inputText>
+                                <p:inputText id="ipt_last" requiredMessage="{msg['p1.requerido']}" value="#{personaUno.lastName}" placeholder="#{msg['p1.phApellido']}" required="true">
+                                    <f:validator validatorId="validacionNombre" />
+                                    <f:validateLength minimum="2" maximum="20"/>
+                                    &nbsp;&nbsp;&nbsp;
+                                </p:inputText>
+                                <p:inputText id="ipt_age" requiredMessage="{msg['p1.requerido']}" value="#{personaUno.age}" placeholder="#{msg['p1.phEdad']}" required="true">
+                                    <f:validator validatorId="validacionEdad" />
+                                    <f:validateLength minimum="1" maximum="2"/>
+                                    &nbsp;&nbsp;&nbsp;
+                                </p:inputText>
+                                <p:inputText id="ipt_user" requiredMessage="{msg['p1.requerido']}" value="#{personaUno.username}" placeholder="#{msg['p1.phUsuario']}" required="true">
+                                    <f:validator validatorId="validacionNombre" />
+                                    <f:validateLength minimum="2" maximum="20" />
+                                </p:inputText>
+                                <p:message for="ipt_names" display="icon" />
+                                <p:message for="ipt_last" display="icon" />
+                                <p:message for="ipt_age" display="icon" />
+                                <p:message for="ipt_user" display="icon" />
+                            </div>
+                            <br/>
+                            <div class="ui-g" align="center">
+                                 <div class="ui-g-12">
+                                     <button type="Submit" style="width: 100%" class="btn btn-info" jsf:actionListener="#{personaUno.onAddNew()}" 
+                                             process="@this"  onclick="" update="tabla1">
+                                         #{msg['p1.btnAgregar']}
+                                     </button>
+                                 </div>
+                             </div>
+                            <br/>
+                            <p:dataTable paginator="true" rows="5" emptyMessage="#{msg['p1.dtVacio']}" id="tabla1" widgetVar="tbl1" var="tbl" value="#{personaUno.listaTemporal}" editable="true" style="margin-bottom:20px;" styleClass="old">
+                                <p:ajax event="cellEdit" listener="#{dtEditView.onCellEdit}" update=":form:msgs" />
+                                <f:facet name="header">
+                                    #{msg['p1.headerTitle']}
+                                </f:facet>
+                                <p:ajax event="rowEdit" listener="#{personaUno.onRowEdit}" update=":form:msgs"/>
+                                
+                                <p:ajax event="rowEditCancel" listener="#{personaUno.onRowCancel}" update=":form:msgs" />
+                                <p:column style="width:20%">
+                                    <p:rowEditor/>
+                                </p:column>
+                                <p:column headerText="#{msg['p1.rowNombre']}">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{tbl.nombre}" /></f:facet>
+                                        <f:facet name="input"><p:inputText maxlength="20" value="#{tbl.nombre}" style="width:100%" label="Year"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="#{msg['p1.rowApellido']}">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{tbl.apellido}" /></f:facet>
+                                        <f:facet name="input"><p:inputText maxlength="20" value="#{tbl.apellido}" style="width:100%" label="Year"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="#{msg['p1.rowEdad']}">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{tbl.edad}" /></f:facet>
+                                        <f:facet name="input"><p:inputText type="number" maxlength="2" value="#{tbl.edad}" style="width:100%" label="Year"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="#{msg['p1.rowUsario']}">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{tbl.usuario}" /></f:facet>
+                                        <f:facet name="input"><p:inputText id="iptuser" value="#{tbl.usuario}" readonly="true" maxlength="15" style="width:100%" label="Year"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="#{msg['p1.btnEliminar']}">
+                                    <button type="Submit" class="btn btn-danger" jsf:actionListener="#{personaUno.deleteRow(tbl.nombre,tbl.apellido,tbl.edad,tbl.usuario)}" icon="fa fa-fw fa-remove" update="tabla1">X</button>
+                                </p:column>
+                            </p:dataTable>    
+                            <p:growl id="msgs" showDetail="true" sticky="true"/>
+                         </h:form>
+                        </p:outputPanel>
+                    </p:layoutUnit>
+                </div>
+            </p:layout>
+
+        </h:body>
+        <script type="text/JavaScript">
+            function limpia()
+            {
+            document.getElementById("ipt_names").reset();
+            document.getElementById("ipt_last").reset();
+            document.getElementById("ipt_age").reset();
+            document.getElementById("ipt_user").reset();
+            }
+            </script>
+    </f:view>
+</html>
+
